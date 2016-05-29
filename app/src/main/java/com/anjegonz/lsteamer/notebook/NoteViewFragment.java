@@ -28,14 +28,17 @@ public class NoteViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        //INflate our fragment edit layout
         View fragmentLayout = inflater.inflate(R.layout.fragment_note_view, container, false);
 
+
+        //Grab widget references from layout
         TextView title = (TextView) fragmentLayout.findViewById(R.id.viewNoteTitle);
         TextView message = (TextView) fragmentLayout.findViewById(R.id.viewNoteMessage);
         ImageView icon = (ImageView) fragmentLayout.findViewById(R.id.viewNoteIcon);
 
+        //inflate widget with data
         Intent intent = getActivity().getIntent();
-
         title.setText(intent.getExtras().getString(MainActivity.NOTE_TITLE_EXTRA));
         message.setText(intent.getExtras().getString(MainActivity.NOTE_MESSAGE_EXTRA));
         //We need to receive the enum in Note. Not a String
