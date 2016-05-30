@@ -25,6 +25,8 @@ public class NoteEditFragment extends Fragment {
     private Note.Category savedButtonCategory;
     private AlertDialog categoryDialogObject, confirmDialogObject;
     private int catcat;
+
+    private static final String MODIFIED_CATEGORY = "Modified Category";
     public NoteEditFragment() {
         // Required empty public constructor
     }
@@ -33,7 +35,6 @@ public class NoteEditFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         //INflate our fragment edit layout
         View fragmentLayout = inflater.inflate(R.layout.fragment_note_edit, container, false);
 
@@ -46,10 +47,17 @@ public class NoteEditFragment extends Fragment {
 
         //inflate widget with data
         Intent intent = getActivity().getIntent();
+
+        if(savedInstanceState != null){
+            savedButtonCategory = (Note.Category) savedInstanceState.get(MODIFIED_CATEGORY);
+        }
+        else{
+            savedButtonCategory = (Note.Category) intent.getSerializableExtra(MainActivity.NOTE_CATEGORY_EXTRA);
+        }
         title.setText(intent.getExtras().getString(MainActivity.NOTE_TITLE_EXTRA));
         message.setText(intent.getExtras().getString(MainActivity.NOTE_MESSAGE_EXTRA));
         //We need to receive the enum in Note. Not a String
-        savedButtonCategory = (Note.Category) intent.getSerializableExtra(MainActivity.NOTE_CATEGORY_EXTRA);
+
         noteCatButton.setImageResource(Note.categoryToDrawable(savedButtonCategory));
         catcat = 0;
         switch(savedButtonCategory.toString()){
@@ -86,6 +94,12 @@ public class NoteEditFragment extends Fragment {
             }
         });
         return fragmentLayout;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putSerializable(MODIFIED_CATEGORY, savedButtonCategory);
     }
 
     private void buildCategoryDialog(){
