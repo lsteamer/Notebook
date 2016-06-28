@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 public class NoteDetailActivity extends AppCompatActivity {
 
+    public static final String NEW_NOTE_EXTRA = "New Note";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +40,15 @@ public class NoteDetailActivity extends AppCompatActivity {
                 setTitle(R.string.viewFragmentTitle);
                 //adding it - 1: Layout container (id in XML), 2: put this inside 3:Tag in case you want to retrieve the fragment
                 fragmentTransaction.add(R.id.note_container, noteViewFragment, "NOTE_VIEW_FRAGMENT");
+                break;
+            case CREATE:
+                NoteEditFragment noteCreateFragment = new NoteEditFragment();
+                setTitle(R.string.create_fragment_title);
+
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(NEW_NOTE_EXTRA, true);
+                noteCreateFragment.setArguments(bundle);
+                fragmentTransaction.add(R.id.note_container, noteCreateFragment, "NOTE_CREATE_FRAGMENT");
                 break;
         }
         //Make it happen.

@@ -54,8 +54,8 @@ public class NoteEditFragment extends Fragment {
         else{
             savedButtonCategory = (Note.Category) intent.getSerializableExtra(MainActivity.NOTE_CATEGORY_EXTRA);
         }
-        title.setText(intent.getExtras().getString(MainActivity.NOTE_TITLE_EXTRA));
-        message.setText(intent.getExtras().getString(MainActivity.NOTE_MESSAGE_EXTRA));
+        title.setText(intent.getExtras().getString(MainActivity.NOTE_TITLE_EXTRA, ""));
+        message.setText(intent.getExtras().getString(MainActivity.NOTE_MESSAGE_EXTRA, ""));
         //We need to receive the enum in Note. Not a String
 
         noteCatButton.setImageResource(Note.categoryToDrawable(savedButtonCategory));
