@@ -27,6 +27,8 @@ public class NoteEditFragment extends Fragment {
     private int catcat;
 
     private static final String MODIFIED_CATEGORY = "Modified Category";
+
+    private boolean newNote = false;
     public NoteEditFragment() {
         // Required empty public constructor
     }
@@ -35,7 +37,15 @@ public class NoteEditFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //INflate our fragment edit layout
+
+        //Grab the bundle that send along whether or not our noteEditFragment is creating a new note
+        Bundle bundle = this.getArguments();
+        if(bundle != null){
+            newNote = bundle.getBoolean(NoteDetailActivity.NEW_NOTE_EXTRA, false);
+        }
+
+
+        //Inflate our fragment edit layout
         View fragmentLayout = inflater.inflate(R.layout.fragment_note_edit, container, false);
 
 
@@ -50,30 +60,30 @@ public class NoteEditFragment extends Fragment {
 
         if(savedInstanceState != null){
             savedButtonCategory = (Note.Category) savedInstanceState.get(MODIFIED_CATEGORY);
+            noteCatButton.setImageResource(Note.categoryToDrawable(savedButtonCategory));
         }
-        else{
+        else if(!newNote){
             savedButtonCategory = (Note.Category) intent.getSerializableExtra(MainActivity.NOTE_CATEGORY_EXTRA);
+            noteCatButton.setImageResource(Note.categoryToDrawable(savedButtonCategory));
+            catcat = 0;
+            switch(savedButtonCategory.toString()){
+                case "PERSONAL":
+                    catcat = 0;
+                    break;
+                case "TECHNICAL":
+                    catcat = 1;
+                    break;
+                case "QUOTE":
+                    catcat = 2;
+                    break;
+                case "FINANCE":
+                    catcat = 3;
+                    break;
+            }
         }
         title.setText(intent.getExtras().getString(MainActivity.NOTE_TITLE_EXTRA, ""));
         message.setText(intent.getExtras().getString(MainActivity.NOTE_MESSAGE_EXTRA, ""));
         //We need to receive the enum in Note. Not a String
-
-        noteCatButton.setImageResource(Note.categoryToDrawable(savedButtonCategory));
-        catcat = 0;
-        switch(savedButtonCategory.toString()){
-            case "PERSONAL":
-                catcat = 0;
-                break;
-            case "TECHNICAL":
-                catcat = 1;
-                break;
-            case "QUOTE":
-                catcat = 2;
-                break;
-            case "FINANCE":
-                catcat = 3;
-                break;
-        }
 
 
         // Inflate the layout for this fragment
