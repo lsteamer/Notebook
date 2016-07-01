@@ -29,6 +29,7 @@ public class NoteEditFragment extends Fragment {
     private static final String MODIFIED_CATEGORY = "Modified Category";
 
     private boolean newNote = false;
+    private long noteID = 0;
     public NoteEditFragment() {
         // Required empty public constructor
     }
@@ -83,6 +84,7 @@ public class NoteEditFragment extends Fragment {
         }
         title.setText(intent.getExtras().getString(MainActivity.NOTE_TITLE_EXTRA, ""));
         message.setText(intent.getExtras().getString(MainActivity.NOTE_MESSAGE_EXTRA, ""));
+        noteID = intent.getExtras().getLong(MainActivity.NOTE_ID_EXTRA, 0);
         //We need to receive the enum in Note. Not a String
 
 
@@ -165,9 +167,9 @@ public class NoteEditFragment extends Fragment {
                 }
                 else{
                     //Otherwise update
-
+                    dbAdapter.updateNote(noteID, title.getText() + "", message.getText() + "", savedButtonCategory);
                 }
-
+                dbAdapter.close();
                 Intent intent = new Intent(getActivity(),MainActivity.class);
                 startActivity(intent);
             }

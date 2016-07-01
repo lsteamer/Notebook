@@ -60,13 +60,23 @@ public class MainActivityListFragment extends ListFragment {
         //Get the position of the note that has been long pressed, place it in Info
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int rowPosition = info.position;
-
+        Note note = (Note) getListAdapter().getItem(rowPosition);
         //returns to us the id of whatever menu item we selected
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.edit:
                 launchNoteDetailActivity(MainActivity.FragmentToLaunch.EDIT, rowPosition);
                 return true;
 
+            case R.id.delete:
+                NotebookDbAdapter dbAdapter = new NotebookDbAdapter(getActivity().getBaseContext());
+                dbAdapter.open();
+                dbAdapter.deleteNote(note.getId());
+
+                notes.clear();
+                notes.addAll(dbAdapter.getAllNotes());
+                noteAdapter.notifyDataSetChanged();
+                dbAdapter.close();
+                return true;
         }
 
         return super.onContextItemSelected(item);

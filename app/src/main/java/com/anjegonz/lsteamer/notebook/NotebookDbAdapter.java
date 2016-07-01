@@ -72,6 +72,22 @@ public class NotebookDbAdapter {
         return newNote;
     }
 
+    public long deleteNote(long idToDelete){
+        return sqlDB.delete(NOTE_TABLE, COLUMN_ID+ " = " + idToDelete, null);
+    }
+
+    public long updateNote(long idToUpdate, String newTitle, String newMessage, Note.Category newCategory){
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TITLE, newTitle);
+        values.put(COLUMN_MESSAGE, newMessage);
+        values.put(COLUMN_CATEGORY, newCategory.name());
+        values.put(COLUMN_DATE, Calendar.getInstance().getTimeInMillis() + "");
+
+        return sqlDB.update(NOTE_TABLE, values, COLUMN_ID + " = " + idToUpdate, null);
+
+    }
+
     public ArrayList<Note> getAllNotes(){
         ArrayList<Note> notes = new ArrayList<Note>();
 
