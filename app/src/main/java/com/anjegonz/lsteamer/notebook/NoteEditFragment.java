@@ -155,6 +155,19 @@ public class NoteEditFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Log.d("Save Note", " Note title: " + title.getText() + " Note message: " + message.getText() + " Note category: " + savedButtonCategory);
+
+                NotebookDbAdapter dbAdapter = new NotebookDbAdapter(getActivity().getBaseContext());
+                dbAdapter.open();
+                if(newNote){
+                    //if it's a new note, create it in the database.
+                    dbAdapter.createNote(title.getText() + "", message.getText() + "",
+                            (savedButtonCategory == null) ? Note.Category.PERSONAL : savedButtonCategory);
+                }
+                else{
+                    //Otherwise update
+
+                }
+
                 Intent intent = new Intent(getActivity(),MainActivity.class);
                 startActivity(intent);
             }
