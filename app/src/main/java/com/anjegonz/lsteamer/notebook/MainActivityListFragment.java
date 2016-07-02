@@ -71,7 +71,6 @@ public class MainActivityListFragment extends ListFragment {
                 NotebookDbAdapter dbAdapter = new NotebookDbAdapter(getActivity().getBaseContext());
                 dbAdapter.open();
                 dbAdapter.deleteNote(note.getId());
-
                 notes.clear();
                 notes.addAll(dbAdapter.getAllNotes());
                 noteAdapter.notifyDataSetChanged();

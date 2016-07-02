@@ -90,7 +90,6 @@ public class NoteEditFragment extends Fragment {
 
         // Inflate the layout for this fragment
         buildCategoryDialog();
-        buildConfigDialog();
 
         noteCatButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -102,7 +101,13 @@ public class NoteEditFragment extends Fragment {
         savedButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                confirmDialogObject.show();
+                if(!newNote){
+
+                    buildConfigDialog();
+                    confirmDialogObject.show();
+                }else{
+                    addNotebookEntry();
+                }
             }
         });
         return fragmentLayout;
@@ -146,43 +151,61 @@ public class NoteEditFragment extends Fragment {
             }
         });
         categoryDialogObject = categoryBuilder.create();
+
     }
 
     private void buildConfigDialog(){
-        AlertDialog.Builder confirmBuilder = new AlertDialog.Builder(getActivity());
-        confirmBuilder.setTitle("Are you sure?");
-        confirmBuilder.setMessage("Are you sure you want to save the changes?");
+            AlertDialog.Builder confirmBuilder = new AlertDialog.Builder(getActivity());
+            confirmBuilder.setTitle("Are you sure?");
+            confirmBuilder.setMessage("Are you sure you want to save the changes?");
 
-        confirmBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Log.d("Save Note", " Note title: " + title.getText() + " Note message: " + message.getText() + " Note category: " + savedButtonCategory);
+            confirmBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.d("Save Note", " Note title: " + title.getText() + " Note message: " + message.getText() + " Note category: " + savedButtonCategory);
 
-                NotebookDbAdapter dbAdapter = new NotebookDbAdapter(getActivity().getBaseContext());
-                dbAdapter.open();
-                if(newNote){
-                    //if it's a new note, create it in the database.
-                    dbAdapter.createNote(title.getText() + "", message.getText() + "",
-                            (savedButtonCategory == null) ? Note.Category.PERSONAL : savedButtonCategory);
+                    NotebookDbAdapter dbAdapter = new NotebookDbAdapter(getActivity().getBaseContext());
+                    dbAdapter.open();
+                    if (newNote) {
+                        //if it's a new note, create it in the database.
+                        dbAdapter.createNote(title.getText() + "", message.getText() + "",
+                                (savedButtonCategory == null) ? Note.Category.PERSONAL : savedButtonCategory);
+                    } else {
+                        //Otherwise update
+                        dbAdapter.updateNote(noteID, title.getText() + "", message.getText() + "", savedButtonCategory);
+                    }
+                    dbAdapter.close();
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    startActivity(intent);
                 }
-                else{
-                    //Otherwise update
-                    dbAdapter.updateNote(noteID, title.getText() + "", message.getText() + "", savedButtonCategory);
+            });
+            confirmBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //do nothing here
                 }
-                dbAdapter.close();
-                Intent intent = new Intent(getActivity(),MainActivity.class);
-                startActivity(intent);
-            }
-        });
-        confirmBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //do nothing here
-            }
-        });
+            });
 
-        confirmDialogObject = confirmBuilder.create();
+            confirmDialogObject = confirmBuilder.create();
 
+    }
+
+    private void addNotebookEntry(){
+        Log.d("Save Note", " Note title: " + title.getText() + " Note message: " + message.getText() + " Note category: " + savedButtonCategory);
+
+        NotebookDbAdapter dbAdapter = new NotebookDbAdapter(getActivity().getBaseContext());
+        dbAdapter.open();
+        if (newNote) {
+            //if it's a new note, create it in the database.
+            dbAdapter.createNote(title.getText() + "", message.getText() + "",
+                    (savedButtonCategory == null) ? Note.Category.PERSONAL : savedButtonCategory);
+        } else {
+            //Otherwise update
+            dbAdapter.updateNote(noteID, title.getText() + "", message.getText() + "", savedButtonCategory);
+        }
+        dbAdapter.close();
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        startActivity(intent);
     }
 
 }
