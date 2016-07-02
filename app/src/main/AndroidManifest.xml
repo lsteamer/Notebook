@@ -19,9 +19,12 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".NoteDetailActivity"
             android:label="@string/editFragmentTitle"
-            android:parentActivityName=".NoteDetailActivity"
-            android:name=".NoteDetailActivity"></activity>
+            android:parentActivityName=".NoteDetailActivity" />
+        <activity android:name=".AppPreferences"
+            android:label="@string/title_preferences"
+            android:parentActivityName=".NoteDetailActivity" />
     </application>
 
 </manifest>
